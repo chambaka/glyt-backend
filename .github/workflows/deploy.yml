@@ -221,18 +221,18 @@ jobs:
               exit 1
             fi
 
-            echo "Ensuring optional env file exists..."
-            if ! run_as_root test -f "$APP_DIR/golyt.env"; then
-              run_as_root touch "$APP_DIR/golyt.env"
-              run_as_root chmod 600 "$APP_DIR/golyt.env"
-              echo "Created empty $APP_DIR/golyt.env — add production overrides there."
+            if ! run_as_root test -f "$APP_DIR/application.yml"; then
+              echo "WARNING: $APP_DIR/application.yml is missing."
+              echo "Copy deploy/application.yml.example to that path on the server before relying on production settings."
             fi
 
             run_as_root chown -R root:root "$APP_DIR"
             run_as_root find "$APP_DIR" -type d -exec chmod 755 {} +
-            run_as_root find "$APP_DIR" -type f ! -name 'golyt.env' -exec chmod 644 {} +
+            run_as_root find "$APP_DIR" -type f ! -name 'application.yml' -exec chmod 644 {} +
             run_as_root chmod 644 "$APP_DIR/$JAR_NAME"
-            run_as_root chmod 600 "$APP_DIR/golyt.env"
+            if run_as_root test -f "$APP_DIR/application.yml"; then
+              run_as_root chmod 600 "$APP_DIR/application.yml"
+            fi
 
             echo "Cleaning temporary files..."
             rm -rf "$TEMP_DIR"

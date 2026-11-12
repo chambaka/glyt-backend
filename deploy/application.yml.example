@@ -1,0 +1,52 @@
+# Copy to the server as /opt/apps/golyt/application.yml
+# (not deployed by GitHub Actions — edit on the VPS only)
+
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/golyt?useSSL=false&allowPublicKeyRetrieval=true&connectionTimeZone=UTC
+    username: golyt
+    password: replace-me
+
+app:
+  jwt:
+    secret: replace-with-at-least-32-random-bytes
+  cors:
+    allowed-origins:
+      - https://ops.golyt.co.tz
+  storage:
+    type: r2
+    endpoint: https://ACCOUNT_ID.r2.cloudflarestorage.com
+    bucket: golyt
+    access-key: replace-me
+    secret-key: replace-me
+    region: auto
+    path-style: true
+  mail:
+    expose-reset-token: false
+  notification:
+    enabled: true
+    base-url: https://notification.example.com
+    api-key: replace-me
+    sender-name: GOLYT
+  ops:
+    public-base-url: https://golyt.example.com
+    pickup-name: GoLyt Zanzibar desk
+    pickup-place: Abeid Amani Karume International Airport, arrivals hall
+    pickup-hours: "06:00–22:00 daily"
+    pickup-phone: "+255 ..."
+    pickup-whatsapp: "255..."
+  seed:
+    enabled: false
+  payments:
+    sandbox: false
+    webhook-secret: replace-me
+
+logging:
+  file:
+    name: /opt/apps/golyt/logs/golyt.log
+  level:
+    root: INFO
+    tz.co.chambaka.glyt: INFO
