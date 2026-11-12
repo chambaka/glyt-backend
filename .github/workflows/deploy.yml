@@ -71,11 +71,6 @@ jobs:
             exit 1
           fi
 
-          if [ ! -f deploy/golyt.service ]; then
-            echo "ERROR: deploy/golyt.service is missing."
-            exit 1
-          fi
-
           echo "Found thin JAR:"
           echo "$JAR_FILE"
           echo "Dependency jars:"
@@ -113,7 +108,7 @@ jobs:
               "mkdir -p /tmp/golyt"
 
       # =====================================================
-      # UPLOAD THIN JAR + LIB + UNIT FILE
+      # UPLOAD THIN JAR + LIB
       # =====================================================
       - name: Upload artifacts to VPS
         uses: nick-fields/retry@v3
@@ -129,7 +124,6 @@ jobs:
               -i ~/.ssh/id_rsa \
               target/golyt-thin.jar \
               target/golyt-lib.tar.gz \
-              deploy/golyt.service \
               ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:/tmp/golyt/
 
       # =====================================================
@@ -151,7 +145,6 @@ jobs:
             JAR_NAME="golyt.jar"
             LIB_DIR="$APP_DIR/lib"
             UNIT_NAME="golyt.service"
-            UNIT_PATH="/etc/systemd/system/${UNIT_NAME}"
 
             echo "========================================="
             echo "STARTING GOLYT THIN JAR DEPLOYMENT"
@@ -162,7 +155,6 @@ jobs:
 
             JAR_FILE="$TEMP_DIR/golyt-thin.jar"
             LIB_ARCHIVE="$TEMP_DIR/golyt-lib.tar.gz"
-            UNIT_FILE="$TEMP_DIR/$UNIT_NAME"
 
             if [ ! -f "$JAR_FILE" ]; then
               echo "ERROR: Thin JAR was not uploaded."
@@ -174,97 +166,102 @@ jobs:
               exit 1
             fi
 
-            if [ ! -f "$UNIT_FILE" ]; then
-              echo "ERROR: $UNIT_NAME was not uploaded."
-              exit 1
-            fi
-
             echo "Logged in as $(id -un) ($(id -u))"
 
+            # SSH user may be non-root. Privileged steps use sudo -n.
+            # systemd unit is installed manually; Actions only restarts it.
+            run_as_root() {
+              if [ "$(id -u)" -eq 0 ]; then
+                "$@"
+              else
+                sudo -n "$@"
+              fi
+            }
+
             if [ "$(id -u)" -ne 0 ]; then
-              echo "ERROR: Deploy user must be root so the unit can run as root and write /etc/systemd/system."
-              echo "Set the VPS_USERNAME secret to root."
-              exit 1
+              if ! sudo -n true 2>/dev/null; then
+                echo "ERROR: $(id -un) needs passwordless sudo for deploy."
+                echo "On the server:"
+                echo "  echo \"$(id -un) ALL=(ALL) NOPASSWD:ALL\" | sudo tee /etc/sudoers.d/golyt-deploy"
+                echo "  sudo chmod 440 /etc/sudoers.d/golyt-deploy"
+                echo "Or set VPS_USERNAME=root."
+                exit 1
+              fi
             fi
 
             echo "Creating application directories..."
-            mkdir -p "$APP_DIR" "$BACKUP_DIR" "$APP_DIR/logs"
+            run_as_root mkdir -p "$APP_DIR" "$BACKUP_DIR" "$APP_DIR/logs"
 
             echo "Backing up existing JAR if present..."
-            if [ -f "$APP_DIR/$JAR_NAME" ]; then
+            if run_as_root test -f "$APP_DIR/$JAR_NAME"; then
               TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-              cp "$APP_DIR/$JAR_NAME" "$BACKUP_DIR/golyt-$TIMESTAMP.jar"
-              if [ -d "$LIB_DIR" ]; then
-                tar -C "$APP_DIR" -czf "$BACKUP_DIR/golyt-lib-$TIMESTAMP.tar.gz" lib
+              run_as_root cp "$APP_DIR/$JAR_NAME" "$BACKUP_DIR/golyt-$TIMESTAMP.jar"
+              if run_as_root test -d "$LIB_DIR"; then
+                run_as_root tar -C "$APP_DIR" -czf "$BACKUP_DIR/golyt-lib-$TIMESTAMP.tar.gz" lib
               fi
               echo "Backup created under $BACKUP_DIR"
             else
               echo "No existing JAR found."
             fi
 
-            echo "Stopping old service if present..."
-            systemctl stop "$UNIT_NAME" || true
+            echo "Stopping service if present..."
+            run_as_root systemctl stop "$UNIT_NAME" || true
 
             echo "Installing thin JAR..."
-            rm -f "$APP_DIR/$JAR_NAME"
-            cp "$JAR_FILE" "$APP_DIR/$JAR_NAME"
+            run_as_root rm -f "$APP_DIR/$JAR_NAME"
+            run_as_root cp "$JAR_FILE" "$APP_DIR/$JAR_NAME"
 
             echo "Installing runtime dependencies..."
-            rm -rf "$LIB_DIR"
-            mkdir -p "$LIB_DIR"
-            tar -C "$APP_DIR" -xzf "$LIB_ARCHIVE"
+            run_as_root rm -rf "$LIB_DIR"
+            run_as_root mkdir -p "$LIB_DIR"
+            run_as_root tar -C "$APP_DIR" -xzf "$LIB_ARCHIVE"
 
-            if [ -z "$(ls -A "$LIB_DIR" 2>/dev/null)" ]; then
+            if ! run_as_root ls -A "$LIB_DIR" >/dev/null 2>&1; then
               echo "ERROR: lib directory is empty after extract."
               exit 1
             fi
 
-            echo "Installing systemd unit as root..."
-            cp "$UNIT_FILE" "$UNIT_PATH"
-            chown root:root "$UNIT_PATH"
-            chmod 644 "$UNIT_PATH"
-
             echo "Ensuring optional env file exists..."
-            if [ ! -f "$APP_DIR/golyt.env" ]; then
-              touch "$APP_DIR/golyt.env"
-              chmod 600 "$APP_DIR/golyt.env"
+            if ! run_as_root test -f "$APP_DIR/golyt.env"; then
+              run_as_root touch "$APP_DIR/golyt.env"
+              run_as_root chmod 600 "$APP_DIR/golyt.env"
               echo "Created empty $APP_DIR/golyt.env — add production overrides there."
             fi
 
-            chown -R root:root "$APP_DIR"
-            find "$APP_DIR" -type d -exec chmod 755 {} +
-            find "$APP_DIR" -type f ! -name 'golyt.env' -exec chmod 644 {} +
-            chmod 644 "$APP_DIR/$JAR_NAME"
-            chmod 600 "$APP_DIR/golyt.env"
+            run_as_root chown -R root:root "$APP_DIR"
+            run_as_root find "$APP_DIR" -type d -exec chmod 755 {} +
+            run_as_root find "$APP_DIR" -type f ! -name 'golyt.env' -exec chmod 644 {} +
+            run_as_root chmod 644 "$APP_DIR/$JAR_NAME"
+            run_as_root chmod 600 "$APP_DIR/golyt.env"
 
             echo "Cleaning temporary files..."
             rm -rf "$TEMP_DIR"
 
-            echo "Reloading systemd and enabling service..."
-            systemctl daemon-reload
-            systemctl enable "$UNIT_NAME"
-
-            echo "Starting service..."
-            systemctl start "$UNIT_NAME"
+            echo "Starting service (unit must already be installed manually)..."
+            if ! run_as_root systemctl start "$UNIT_NAME"; then
+              echo "ERROR: could not start $UNIT_NAME."
+              echo "Install deploy/golyt.service on the server first, then: systemctl enable --now golyt.service"
+              run_as_root journalctl -u "$UNIT_NAME" -n 100 --no-pager || true
+              exit 1
+            fi
 
             echo "Waiting for startup..."
             sleep 10
 
             echo "Checking service status..."
-            systemctl status "$UNIT_NAME" --no-pager || true
+            run_as_root systemctl status "$UNIT_NAME" --no-pager || true
 
-            if ! systemctl is-active --quiet "$UNIT_NAME"; then
+            if ! run_as_root systemctl is-active --quiet "$UNIT_NAME"; then
               echo "ERROR: Service failed to start."
               echo "Showing recent logs..."
-              journalctl -u "$UNIT_NAME" -n 100 --no-pager || true
+              run_as_root journalctl -u "$UNIT_NAME" -n 100 --no-pager || true
               exit 1
             fi
 
             echo "========================================="
             echo "DEPLOYMENT COMPLETED SUCCESSFULLY"
             echo "========================================="
-            echo "Unit: $UNIT_PATH"
-            echo "Process user: root"
+            echo "SSH deploy user: $(id -un)"
             echo "Thin JAR: $APP_DIR/$JAR_NAME"
             echo "Libs: $LIB_DIR"
             EOF
