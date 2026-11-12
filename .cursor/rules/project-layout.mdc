@@ -1,0 +1,16 @@
+---
+description: Where the GoLyt app, API, and admin console live
+alwaysApply: true
+---
+
+# Project layout
+
+This folder is the Spring Boot API plus Compose, Nginx, and docs. The phone app and admin console are siblings.
+
+- API, Compose, and docs: `/home/lupo/projects/tz.co.chambaka/glyt-backend`
+- Flutter **ops** app (officers): `/home/lupo/projects/tz.co.chambaka/glyt-app`
+- Vue **ops** console: `/home/lupo/projects/tz.co.chambaka/glyt-admin-ui`
+- Public website: `/home/lupo/projects/tz.co.chambaka/glyt-website`
+- Flutter traveler app: `/home/lupo/projects/tz.co.chambaka/glyt-customer-app`
+
+Run Compose and `mvn spring-boot:run` from `glyt-backend`. Ops phone: `glyt-app`. Ops console: `npm run dev` in `glyt-admin-ui` (http://localhost:5180). Website: `npm run dev` in `glyt-website`. Traveler app: `glyt-customer-app`.

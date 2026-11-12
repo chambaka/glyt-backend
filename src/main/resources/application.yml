@@ -1,0 +1,101 @@
+server:
+  port: 8070
+
+spring:
+  application:
+    name: golyt
+  datasource:
+    url: jdbc:mysql://localhost:3306/golyt?useSSL=false&allowPublicKeyRetrieval=true&connectionTimeZone=UTC
+    username: ${DB_USERNAME:intelligra}
+    password: ${DB_PASSWORD:2kbSbx2DENmrRHHP!}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        type:
+          preferred_enum_jdbc_type: VARCHAR
+        jdbc:
+          time_zone: UTC
+  servlet:
+    multipart:
+      max-file-size: 8MB
+      max-request-size: 24MB
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    time-zone: Africa/Dar_es_Salaam
+
+app:
+  jwt:
+    secret: ${JWT_SECRET_BASE64:x6S1mXpncCe6plcvkhonxIxyBoava4VGbnjXoS0LRBI}
+    access-token-ttl: 15m
+    refresh-token-ttl: 8h
+  cors:
+    allowed-origins:
+      - http://localhost
+  # Object storage: local | r2 (Cloudflare) | s3 | minio
+  # Production uses Cloudflare R2: APP_STORAGE_TYPE=r2
+  storage:
+    type: ${APP_STORAGE_TYPE:local}
+    upload-dir: ${APP_STORAGE_UPLOAD_DIR:data/uploads}
+    # R2: https://<ACCOUNT_ID>.r2.cloudflarestorage.com
+    endpoint: ${APP_STORAGE_ENDPOINT:https://8a862f3278883cf5eda0064b9ff45843.r2.cloudflarestorage.com}
+    bucket: ${APP_STORAGE_BUCKET:golyt}
+    access-key: ${APP_STORAGE_ACCESS_KEY:c8f55c091614b34af63ba36bb1e30bc6}
+    secret-key: ${APP_STORAGE_SECRET_KEY:8b8cc10a974919a3520202c22331cc1beca8bf31a88ea1ae80c88530db75ab11}
+    region: ${APP_STORAGE_REGION:auto}
+    path-style: ${APP_STORAGE_PATH_STYLE:true}
+  mail:
+    expose-reset-token: ${APP_MAIL_EXPOSE_RESET_TOKEN:false}
+  # Same SMS platform as Soleil Nexus (chambaka-notification-service)
+  notification:
+    enabled: ${APP_NOTIFICATION_ENABLED:true}
+    base-url: ${APP_NOTIFICATION_BASE_URL:http://localhost:7575}
+    api-key: ${APP_NOTIFICATION_API_KEY:}
+    sender-name: ${APP_NOTIFICATION_SENDER_NAME:GOLYT}
+    provider: ${APP_NOTIFICATION_PROVIDER:}
+  ops:
+    overweight-kg: 20
+    uncollected-days: 2
+    public-base-url: http://localhost:8080
+    pickup-name: GoLyt Zanzibar desk
+    pickup-place: Abeid Amani Karume International Airport, arrivals hall
+    pickup-hours: "06:00–22:00 daily"
+    pickup-phone: "+255 777 000 111"
+    pickup-whatsapp: "255777000111"
+  seed:
+    enabled: true
+  payments:
+    sandbox: true
+    webhook-secret: golyt-webhook-dev-secret
+    mobile-money-checkout-base: http://localhost:8080/api/v1/payments/sandbox
+    card-checkout-base: http://localhost:8080/api/v1/payments/sandbox
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+logging:
+  file:
+    name: ${LOG_PATH:logs}/golyt.log
+  exception-conversion-word: ex
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{correlationId:-}] [%X{userId:-}] %logger{36} - %msg%n%ex"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{correlationId:-}] [%X{userId:-}] [%X{userRole:-}] %logger{50} - %msg%n%ex"
+  logback:
+    rollingpolicy:
+      file-name-pattern: ${LOG_PATH:logs}/golyt.%d{yyyy-MM-dd}.%i.log.gz
+      max-file-size: 50MB
+      max-history: 30
+      total-size-cap: 2GB
+  level:
+    root: INFO
+    tz.co.chambaka.glyt: DEBUG
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.hibernate.SQL: WARN
+
