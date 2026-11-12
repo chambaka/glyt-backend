@@ -19,6 +19,8 @@ import tz.co.chambaka.glyt.logging.CorrelationIds;
 import tz.co.chambaka.glyt.logging.RequestLoggingFilter;
 import tz.co.chambaka.glyt.security.JwtAuthenticationFilter;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Configuration
@@ -28,15 +30,18 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CorrelationIdFilter correlationIdFilter;
     private final RequestLoggingFilter requestLoggingFilter;
+    private final AppProperties appProperties;
 
     public SecurityConfig(
             JwtAuthenticationFilter jwtAuthenticationFilter,
             CorrelationIdFilter correlationIdFilter,
-            RequestLoggingFilter requestLoggingFilter
+            RequestLoggingFilter requestLoggingFilter,
+            AppProperties appProperties
     ) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.correlationIdFilter = correlationIdFilter;
         this.requestLoggingFilter = requestLoggingFilter;
+        this.appProperties = appProperties;
     }
 
     @Bean
@@ -85,7 +90,17 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("http://localhost:*", "http://127.0.0.1:*"));
+        LinkedHashSet<String> patterns = new LinkedHashSet<>();
+        patterns.add("http://localhost:*");
+        patterns.add("http://127.0.0.1:*");
+        if (appProperties.cors() != null && appProperties.cors().allowedOrigins() != null) {
+            for (String origin : appProperties.cors().allowedOrigins()) {
+                if (origin != null && !origin.isBlank()) {
+                    patterns.add(origin.trim());
+                }
+            }
+        }
+        configuration.setAllowedOriginPatterns(new ArrayList<>(patterns));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of(
                 "Authorization",
@@ -95,6 +110,7 @@ public class SecurityConfig {
                 CorrelationIds.REQUEST_ID_HEADER
         ));
         configuration.setExposedHeaders(List.of(CorrelationIds.HEADER));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

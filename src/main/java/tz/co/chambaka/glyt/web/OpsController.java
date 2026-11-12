@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tz.co.chambaka.glyt.domain.enums.Role;
+import tz.co.chambaka.glyt.service.AirlineService;
 import tz.co.chambaka.glyt.service.DashboardService;
 import tz.co.chambaka.glyt.service.ExceptionService;
 import tz.co.chambaka.glyt.service.NotificationService;
@@ -21,6 +22,8 @@ import tz.co.chambaka.glyt.service.ReportService;
 import tz.co.chambaka.glyt.service.StaffContext;
 import tz.co.chambaka.glyt.service.StorageService;
 import tz.co.chambaka.glyt.service.UserAdminService;
+import tz.co.chambaka.glyt.web.dto.GlytDtos.AirlineView;
+import tz.co.chambaka.glyt.web.dto.GlytDtos.AirlineWrite;
 import tz.co.chambaka.glyt.web.dto.GlytDtos.AuditView;
 import tz.co.chambaka.glyt.web.dto.GlytDtos.DashboardView;
 import tz.co.chambaka.glyt.web.dto.GlytDtos.ExceptionRequest;
@@ -58,6 +61,7 @@ public class OpsController {
     private final StaffContext staff;
     private final NotificationService notifications;
     private final PortalDepthService portal;
+    private final AirlineService airlines;
 
     public OpsController(
             DashboardService dashboard,
@@ -67,7 +71,8 @@ public class OpsController {
             UserAdminService users,
             StaffContext staff,
             NotificationService notifications,
-            PortalDepthService portal
+            PortalDepthService portal,
+            AirlineService airlines
     ) {
         this.dashboard = dashboard;
         this.storage = storage;
@@ -77,6 +82,7 @@ public class OpsController {
         this.staff = staff;
         this.notifications = notifications;
         this.portal = portal;
+        this.airlines = airlines;
     }
 
     @GetMapping("/dashboard")
@@ -136,6 +142,27 @@ public class OpsController {
     public MessageResponse deleteStorage(@PathVariable Long id) {
         portal.deleteStorage(id);
         return new MessageResponse("Storage slot deleted.", null);
+    }
+
+    @GetMapping("/config/airlines")
+    public List<AirlineView> listAirlines(@RequestParam(required = false) Boolean active) {
+        return airlines.list(active);
+    }
+
+    @PostMapping("/config/airlines")
+    public AirlineView createAirline(@RequestBody AirlineWrite request) {
+        return airlines.create(request);
+    }
+
+    @PatchMapping("/config/airlines/{id}")
+    public AirlineView updateAirline(@PathVariable Long id, @RequestBody AirlineWrite request) {
+        return airlines.update(id, request);
+    }
+
+    @DeleteMapping("/config/airlines/{id}")
+    public MessageResponse deleteAirline(@PathVariable Long id) {
+        airlines.delete(id);
+        return new MessageResponse("Airline deleted.", null);
     }
 
     @GetMapping("/catalog/services")

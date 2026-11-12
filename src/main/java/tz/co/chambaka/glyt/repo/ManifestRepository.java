@@ -12,4 +12,6 @@ public interface ManifestRepository extends JpaRepository<Manifest, Long> {
     List<Manifest> findByStatusOrderByCreatedAtDesc(ManifestStatus status);
 
     long countByPreparedById(Long userId);
+
+    long countByAirlineIgnoreCase(String airline);
 }

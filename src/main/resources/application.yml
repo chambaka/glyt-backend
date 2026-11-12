@@ -34,7 +34,11 @@ app:
     refresh-token-ttl: 8h
   cors:
     allowed-origins:
-      - http://localhost
+      - http://localhost:*
+      - http://127.0.0.1:*
+      - https://admin.golyt.co.tz
+      - https://golyt.co.tz
+      - https://www.golyt.co.tz
   # Object storage: local | r2 (Cloudflare) | s3 | minio
   # Production uses Cloudflare R2: APP_STORAGE_TYPE=r2
   storage:

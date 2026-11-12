@@ -452,4 +452,21 @@ public final class GlytDtos {
     public record SupportAssignRequest(Long assignedToId) {}
 
     public record SupportResolveRequest(String notes) {}
+
+    public record AirlineView(
+            long id,
+            String code,
+            String name,
+            String country,
+            boolean active,
+            int sortOrder
+    ) {}
+
+    public record AirlineWrite(
+            String code,
+            String name,
+            String country,
+            Boolean active,
+            Integer sortOrder
+    ) {}
 }

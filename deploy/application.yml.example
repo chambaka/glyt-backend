@@ -15,7 +15,9 @@ app:
     secret: replace-with-at-least-32-random-bytes
   cors:
     allowed-origins:
-      - https://ops.golyt.co.tz
+      - https://admin.golyt.co.tz
+      - https://golyt.co.tz
+      - https://www.golyt.co.tz
   storage:
     type: r2
     endpoint: https://ACCOUNT_ID.r2.cloudflarestorage.com

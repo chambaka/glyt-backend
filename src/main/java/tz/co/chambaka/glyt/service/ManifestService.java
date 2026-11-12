@@ -39,6 +39,7 @@ public class ManifestService {
     private final Journal journal;
     private final CodeGenerator codes;
     private final ExceptionService exceptionService;
+    private final AirlineService airlineService;
 
     public ManifestService(
             ManifestRepository manifests,
@@ -48,7 +49,8 @@ public class ManifestService {
             StaffContext staff,
             Journal journal,
             CodeGenerator codes,
-            ExceptionService exceptionService
+            ExceptionService exceptionService,
+            AirlineService airlineService
     ) {
         this.manifests = manifests;
         this.links = links;
@@ -58,6 +60,7 @@ public class ManifestService {
         this.journal = journal;
         this.codes = codes;
         this.exceptionService = exceptionService;
+        this.airlineService = airlineService;
     }
 
     @Transactional
@@ -66,7 +69,7 @@ public class ManifestService {
         UserAccount actor = staff.account();
         Manifest manifest = new Manifest();
         manifest.setNumber(codes.next("manifest", "MF-JRO-ZNZ-", 5));
-        manifest.setAirline(Texts.required(request.airline(), "Airline"));
+        manifest.setAirline(airlineService.resolveName(request.airline()));
         manifest.setFlightNumber(Texts.required(request.flightNumber(), "Flight number"));
         manifest.setManifestDate(request.manifestDate() == null || request.manifestDate().isBlank()
                 ? LocalDate.now(DAR).toString()
