@@ -1,0 +1,23 @@
+[Unit]
+Description=GoLyt luggage storage and transfer API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/apps/golyt
+EnvironmentFile=-/opt/apps/golyt/golyt.env
+# systemd does not expand globs; run via bash so lib/* resolves.
+ExecStart=/bin/bash -c 'exec /usr/bin/java -cp "/opt/apps/golyt/golyt.jar:/opt/apps/golyt/lib/*" tz.co.chambaka.glyt.GlytApplication'
+SuccessExitStatus=143
+Restart=always
+RestartSec=10
+TimeoutStopSec=60
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=golyt
+
+[Install]
+WantedBy=multi-user.target
