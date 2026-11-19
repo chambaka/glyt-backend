@@ -35,13 +35,21 @@ public class CustomerBookingService {
     @Transactional
     public CustomerRecord createCustomer(CustomerInput input) {
         staff.require(Role.ADMIN, Role.KIA_OFFICER);
-        Customer customer = new Customer();
-        customer.setCustomerNumber(codes.next("customer", "CU-", 6));
+        String nationality = Texts.required(input.nationality(), "Nationality").trim().toUpperCase();
+        String passport = Texts.required(input.passportNumber(), "Passport number").trim().toUpperCase();
+        Customer customer = customers.findByPassportNumberIgnoreCaseAndNationalityIgnoreCase(passport, nationality)
+                .orElseGet(() -> {
+                    Customer created = new Customer();
+                    created.setCustomerNumber(codes.next("customer", "CU-", 6));
+                    created.setPassportNumber(passport);
+                    created.setNationality(nationality);
+                    return created;
+                });
         customer.setFullName(Texts.required(input.fullName(), "Full name"));
         customer.setPhone(Texts.required(input.phone(), "Mobile number"));
         customer.setEmail(Texts.required(input.email(), "Email"));
-        customer.setNationality(Texts.required(input.nationality(), "Nationality"));
-        customer.setPassportNumber(Texts.required(input.passportNumber(), "Passport number"));
+        customer.setNationality(nationality);
+        customer.setPassportNumber(passport);
         customers.save(customer);
         return toCustomer(customer);
     }

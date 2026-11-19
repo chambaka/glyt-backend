@@ -7,8 +7,11 @@ import org.springframework.data.repository.query.Param;
 import tz.co.chambaka.glyt.domain.Customer;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
+    Optional<Customer> findByPassportNumberIgnoreCaseAndNationalityIgnoreCase(String passportNumber, String nationality);
+
     @Query("""
             select c from Customer c
             where lower(c.fullName) like :q

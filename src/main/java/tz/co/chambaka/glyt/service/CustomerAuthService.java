@@ -65,13 +65,27 @@ public class CustomerAuthService {
         if (accounts.existsByEmailIgnoreCase(email)) {
             throw new ApiException(HttpStatus.CONFLICT, "That email is already registered.");
         }
-        Customer customer = new Customer();
-        customer.setCustomerNumber(codes.next("customer", "CU-", 6));
-        customer.setFullName(Texts.required(request.fullName(), "Full name"));
-        customer.setPhone(Texts.required(request.phone(), "Mobile number"));
+        String nationality = Texts.required(request.nationality(), "Nationality").trim().toUpperCase();
+        String passport = Texts.required(request.passportNumber(), "Passport number").trim().toUpperCase();
+        String fullName = Texts.required(request.fullName(), "Full name");
+        String phone = Texts.required(request.phone(), "Mobile number");
+
+        Customer customer = customers.findByPassportNumberIgnoreCaseAndNationalityIgnoreCase(passport, nationality)
+                .orElseGet(() -> {
+                    Customer created = new Customer();
+                    created.setCustomerNumber(codes.next("customer", "CU-", 6));
+                    created.setPassportNumber(passport);
+                    created.setNationality(nationality);
+                    return created;
+                });
+        if (customer.getId() != null && accounts.existsByCustomerId(customer.getId())) {
+            throw new ApiException(HttpStatus.CONFLICT, "An account already exists for this passport and nationality.");
+        }
+        customer.setFullName(fullName);
+        customer.setPhone(phone);
         customer.setEmail(email);
-        customer.setNationality(Texts.required(request.nationality(), "Nationality"));
-        customer.setPassportNumber(Texts.required(request.passportNumber(), "Passport number"));
+        customer.setNationality(nationality);
+        customer.setPassportNumber(passport);
         customers.save(customer);
 
         CustomerAccount account = new CustomerAccount();

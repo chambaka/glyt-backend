@@ -50,16 +50,18 @@ Access tokens last 15 minutes. The app refreshes them and signs out after 30 min
 python3 scripts/acceptance.py
 ```
 
-## Pilot accounts
+## Pilot accounts (seeded)
 
-Password for all of them: `Golyt#2026`
+Created on first API start when `APP_SEED_ENABLED=true` and the users table is empty. Shared password: `Golyt#2026`
 
-| Email | Where to sign in |
-| --- | --- |
-| kia@golyt.co.tz | Phone app |
-| znz@golyt.co.tz | Phone app |
-| lead@golyt.co.tz | Web console |
-| board@golyt.co.tz | Web console |
+| Name | Email | Phone | Role | Where to sign in |
+| --- | --- | --- | --- | --- |
+| Amina Hassan | lead@golyt.co.tz | +255700000001 | ADMIN | Ops console |
+| John Mrema | kia@golyt.co.tz | +255700000002 | KIA_OFFICER | Officer phone app |
+| Fatma Ali | znz@golyt.co.tz | +255700000003 | ZNZ_OFFICER | Officer phone app |
+| Peter Mgaya | board@golyt.co.tz | +255700000004 | READONLY | Ops console |
+
+There is no seeded customer account — register a traveller on the website Account page. Full roles, seeding rules, and a test matrix are in [docs/user-guide/GoLyt-Platform-User-Guide.pdf](docs/user-guide/GoLyt-Platform-User-Guide.pdf) (§ A5).
 
 API docs: `http://localhost:8080/swagger-ui.html`
 

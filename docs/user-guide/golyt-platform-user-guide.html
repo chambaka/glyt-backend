@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GoLyt Platform User Guide</title>
+  <style>
+    :root {
+      --navy: #002050;
+      --navy-soft: #0a3366;
+      --cyan: #00a8e8;
+      --cyan-deep: #0090c8;
+      --cyan-soft: #e6f7fd;
+      --mist: #f5fafc;
+      --text: #243a52;
+      --muted: #5a7188;
+      --line: rgba(0, 32, 80, 0.12);
+      --ok: #1f7a4d;
+      --warn: #b86a12;
+      --err: #b42318;
+      --radius: 14px;
+      --font: "Manrope", "Segoe UI", sans-serif;
+    }
+
+    @page {
+      size: A4;
+      margin: 16mm 14mm 18mm;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 10.5pt;
+      line-height: 1.5;
+      background: #fff;
+    }
+
+    h1, h2, h3 {
+      color: var(--navy);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.4em;
+    }
+
+    h1 { font-size: 28pt; line-height: 1.1; }
+    h2 { font-size: 18pt; }
+    h3 { font-size: 12.5pt; margin-top: 0.8em; }
+
+    p { margin: 0 0 0.8em; }
+    ul, ol { margin: 0 0 1em; padding-left: 1.2em; }
+    li { margin-bottom: 0.35em; }
+    code {
+      background: var(--cyan-soft);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 0.92em;
+    }
+
+    .muted { color: var(--muted); }
+    .kicker {
+      color: var(--cyan);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    /* Cover */
+    .cover {
+      height: 255mm;
+      page-break-after: always;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 28px;
+      border-radius: 18px;
+      background:
+        radial-gradient(900px 420px at 0% 0%, rgba(0, 168, 232, 0.28), transparent 55%),
+        linear-gradient(160deg, var(--navy) 0%, var(--navy-soft) 55%, #001536 100%);
+      color: #fff;
+    }
+    .cover .logo-plate {
+      display: inline-flex;
+      background: #fff;
+      border-radius: 12px;
+      padding: 10px 14px;
+      width: fit-content;
+    }
+    .cover .logo-plate img { height: 48px; display: block; }
+    .cover .route {
+      margin-top: 18px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(230, 247, 253, 0.72);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .cover h1 {
+      color: #fff;
+      font-size: 36pt;
+      margin-top: 28px;
+      max-width: 12ch;
+    }
+    .cover .lede {
+      max-width: 34rem;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 12.5pt;
+    }
+    .cover-parts {
+      list-style: none;
+      padding: 0;
+      margin: 22px 0 0;
+      max-width: 32rem;
+    }
+    .cover-parts li {
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+    .cover-parts b { color: var(--cyan); margin-right: 8px; }
+    .cover-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.18);
+      padding-top: 18px;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 0.92rem;
+    }
+
+    /* Sections */
+    .toc, .page, .part-divider {
+      page-break-after: always;
+      padding-top: 4px;
+    }
+    .page:last-child { page-break-after: auto; }
+
+    .part-divider {
+      height: 250mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 8mm;
+      border-radius: 18px;
+      background:
+        radial-gradient(700px 360px at 100% 0%, rgba(0, 168, 232, 0.22), transparent 60%),
+        linear-gradient(160deg, var(--navy) 0%, var(--navy-soft) 100%);
+      color: #fff;
+    }
+    .part-divider .letter {
+      font-size: 80pt;
+      font-weight: 800;
+      color: var(--cyan);
+      line-height: 1;
+    }
+    .part-divider h2 { color: #fff; font-size: 26pt; margin-top: 10px; }
+    .part-divider p { color: rgba(255, 255, 255, 0.82); max-width: 32rem; font-size: 12pt; }
+
+    .toc-card, .info-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, #fff, var(--mist));
+      padding: 14px 18px;
+      margin-bottom: 14px;
+      break-inside: avoid;
+    }
+    .toc-card h3 { margin-top: 0; color: var(--cyan-deep); text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.1em; }
+    .toc-list { list-style: none; padding: 0; margin: 0; }
+    .toc-list li {
+      padding: 5px 0;
+      border-bottom: 1px solid var(--line);
+      margin: 0;
+    }
+    .toc-list li:last-child { border-bottom: none; }
+    .toc-list .num { color: var(--cyan-deep); font-weight: 700; display: inline-block; min-width: 2.2em; }
+
+    .shot {
+      margin: 12px auto 6px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(0, 32, 80, 0.08);
+      break-inside: avoid;
+    }
+    .shot img { display: block; width: 100%; height: auto; }
+    .shot.narrow { width: 66%; }
+    .shot.medium { width: 82%; }
+    .shot.phone {
+      width: 42%;
+      max-width: 320px;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 22px;
+    }
+    .caption {
+      color: var(--muted);
+      font-size: 0.84rem;
+      margin: 4px 0 10px;
+      text-align: center;
+    }
+
+    .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 14px; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: var(--cyan-soft);
+      color: var(--navy);
+      border: 1px solid rgba(0, 168, 232, 0.28);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .callout {
+      border-left: 4px solid var(--cyan);
+      background: var(--cyan-soft);
+      border-radius: 0 10px 10px 0;
+      padding: 10px 12px;
+      margin: 12px 0;
+      break-inside: avoid;
+    }
+    .callout.warn { border-left-color: var(--warn); background: rgba(184, 106, 18, 0.08); }
+    .callout.ok { border-left-color: var(--ok); background: rgba(31, 122, 77, 0.08); }
+
+    table.grid {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 14px;
+      font-size: 0.92em;
+      break-inside: avoid;
+    }
+    table.grid th, table.grid td {
+      border: 1px solid var(--line);
+      padding: 7px 9px;
+      text-align: left;
+      vertical-align: top;
+    }
+    table.grid th { background: var(--navy); color: #fff; font-weight: 700; }
+    table.grid tr:nth-child(even) td { background: var(--mist); }
+
+    /* Flow diagram */
+    .flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: stretch; margin: 12px 0 16px; }
+    .flow .step {
+      flex: 1 1 22%;
+      min-width: 30mm;
+      border: 1px solid var(--line);
+      border-top: 4px solid var(--cyan);
+      border-radius: 10px;
+      background: var(--mist);
+      padding: 8px 9px;
+      font-size: 0.86rem;
+      break-inside: avoid;
+    }
+    .flow .step b { display: block; color: var(--navy); margin-bottom: 2px; }
+    .flow .step .who { color: var(--cyan-deep); font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    .footer-note {
+      margin-top: 18px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    @media print {
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= COVER ================= -->
+  <section class="cover">
+    <div>
+      <div class="logo-plate"><img src="screenshots/logo.png" alt="GoLyt" /></div>
+      <div class="route">Kilimanjaro → Zanzibar luggage custody</div>
+      <h1>Platform User Guide</h1>
+      <p class="lede">
+        One guide for the whole GoLyt platform: how travellers book and track bags on the public
+        website, how KIA and Zanzibar officers run custody on the phone app, and how ops leads
+        oversee the corridor from the web console.
+      </p>
+      <ul class="cover-parts">
+        <li><b>A</b> Platform overview, roles and end-to-end flow</li>
+        <li><b>B</b> Public website — traveller guide</li>
+        <li><b>C</b> Ops console — administrator guide</li>
+        <li><b>D</b> Daily operations tips (SLA, unpaid bookings)</li>
+        <li><b>E</b> Officer phone app — KIA and Zanzibar custody</li>
+      </ul>
+    </div>
+    <div class="cover-meta">
+      <div><strong>Audience</strong><br />Travellers, KIA/ZNZ officers, ops leads, ADMIN and READONLY staff</div>
+      <div><strong>Product</strong><br />GoLyt website + ops console + officer phone app</div>
+      <div><strong>Tagline</strong><br />Go light. Explore more.</div>
+      <div><strong>Version</strong><br />November 2026</div>
+    </div>
+  </section>
+
+  <!-- ================= TOC ================= -->
+  <section class="toc">
+    <div class="kicker">Contents</div>
+    <h2>What’s in this guide</h2>
+    <p class="muted">Chapters follow the order a bag travels: from the traveller’s first visit to the website through to daily operations.</p>
+    <div class="two-col">
+      <div>
+        <div class="toc-card">
+          <h3>Part A · Overview</h3>
+          <ol class="toc-list">
+            <li><span class="num">A1</span> What GoLyt is</li>
+            <li><span class="num">A2</span> The four surfaces</li>
+            <li><span class="num">A3</span> Roles and access</li>
+            <li><span class="num">A4</span> End-to-end flow</li>
+            <li><span class="num">A5</span> Seeded users for testing</li>
+          </ol>
+        </div>
+        <div class="toc-card">
+          <h3>Part B · Public website</h3>
+          <ol class="toc-list">
+            <li><span class="num">B1</span> Home</li>
+            <li><span class="num">B2</span> How it works</li>
+            <li><span class="num">B3</span> Services</li>
+            <li><span class="num">B4</span> Pricing</li>
+            <li><span class="num">B5</span> Book a service (quote)</li>
+            <li><span class="num">B6</span> Track luggage</li>
+            <li><span class="num">B7</span> Customer account — sign in</li>
+            <li><span class="num">B8</span> My bookings and support</li>
+            <li><span class="num">B9</span> FAQs</li>
+          </ol>
+        </div>
+      </div>
+      <div>
+        <div class="toc-card">
+          <h3>Part C · Ops console</h3>
+          <ol class="toc-list">
+            <li><span class="num">C1</span> Sign in, SMS reset, password change</li>
+            <li><span class="num">C2</span> Dashboard</li>
+            <li><span class="num">C3</span> Workload</li>
+            <li><span class="num">C4</span> Exceptions</li>
+            <li><span class="num">C5</span> Support</li>
+            <li><span class="num">C6</span> Bags</li>
+            <li><span class="num">C7</span> Bookings</li>
+            <li><span class="num">C8</span> Manifests</li>
+            <li><span class="num">C9</span> Payments</li>
+            <li><span class="num">C10</span> Facilities</li>
+            <li><span class="num">C11</span> Catalog</li>
+            <li><span class="num">C12</span> Reports</li>
+            <li><span class="num">C13</span> Audits</li>
+            <li><span class="num">C14</span> Users (add user, SMS)</li>
+          </ol>
+        </div>
+        <div class="toc-card">
+          <h3>Part D · Daily operations</h3>
+          <ol class="toc-list">
+            <li><span class="num">D1</span> Start-of-shift routine</li>
+            <li><span class="num">D2</span> Working the SLA queue</li>
+            <li><span class="num">D3</span> Unpaid and pending bookings</li>
+            <li><span class="num">D4</span> End-of-day checklist</li>
+            <li><span class="num">D5</span> Quick reference</li>
+          </ol>
+        </div>
+        <div class="toc-card">
+          <h3>Part E · Officer phone app</h3>
+          <ol class="toc-list">
+            <li><span class="num">E1</span> Sign in and password change</li>
+            <li><span class="num">E2</span> Home shell and navigation</li>
+            <li><span class="num">E3</span> Scan bag</li>
+            <li><span class="num">E4</span> Bookings first, then bags</li>
+            <li><span class="num">E5</span> Bag detail and custody actions</li>
+            <li><span class="num">E6</span> KIA receive and seal</li>
+            <li><span class="num">E7</span> Manifests (create → handover)</li>
+            <li><span class="num">E8</span> Zanzibar receive, store, collect</li>
+            <li><span class="num">E9</span> Exceptions and reports</li>
+            <li><span class="num">E10</span> Role checklist</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PART A ================= -->
+  <section class="part-divider">
+    <div class="letter">A</div>
+    <h2>Platform overview</h2>
+    <p>What GoLyt does, who uses each part of it, and how a bag moves from Kilimanjaro to a Zanzibar pickup desk.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part A · Overview</div>
+    <h2>A1. What GoLyt is</h2>
+    <div class="pill-row"><span class="pill">Custody, not GPS</span><span class="pill">KIA → ZNZ</span><span class="pill">Pilot corridor</span></div>
+    <p>
+      GoLyt lets travellers fly light between <strong>Kilimanjaro International Airport (KIA)</strong> and
+      <strong>Zanzibar (ZNZ)</strong>. Trained officers take custody of the luggage at KIA, seal it, hand it to the airline by manifest,
+      receive and store it in Zanzibar, and release it to the verified owner at a pickup desk.
+    </p>
+    <p>
+      Tracking is based on <strong>custody events</strong> recorded by officers (received, sealed, handed over, received, stored, ready, collected)
+      — not live GPS positions.
+    </p>
+
+    <h2 style="margin-top:18px">A2. The four surfaces</h2>
+    <table class="grid">
+      <tr><th>Surface</th><th>Who uses it</th><th>What it is for</th></tr>
+      <tr>
+        <td><strong>Public website</strong></td>
+        <td>Travellers</td>
+        <td>Learn about the service, see prices, get a quote, create an account, view bookings, track a bag, contact support.</td>
+      </tr>
+      <tr>
+        <td><strong>Officer phone app</strong></td>
+        <td>KIA_OFFICER, ZNZ_OFFICER</td>
+        <td>Register bags, take photos, apply seals, scan QR labels, build and receive manifests, shelve and release bags.</td>
+      </tr>
+      <tr>
+        <td><strong>Ops console (web)</strong></td>
+        <td>ADMIN, READONLY</td>
+        <td>Monitor the corridor, work exceptions and support, review bookings and payments, manage facilities, catalog, users, reports and audits.</td>
+      </tr>
+      <tr>
+        <td><strong>Backend API</strong></td>
+        <td>All of the above (behind the scenes)</td>
+        <td>Single source of truth for bags, bookings, payments, manifests, notifications and audit history.</td>
+      </tr>
+    </table>
+
+    <div class="callout">
+      This guide documents the <strong>public website</strong> (Part B), the <strong>ops console</strong> (Part C), and the
+      <strong>officer phone app</strong> (Part E) in detail. Part A’s end-to-end flow shows how the three surfaces fit together.
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part A · Overview</div>
+    <h2>A3. Roles and access</h2>
+    <table class="grid">
+      <tr><th>Role</th><th>Where they sign in</th><th>What they can do</th></tr>
+      <tr>
+        <td><strong>Customer</strong></td>
+        <td>Public website → Account</td>
+        <td>Get quotes, create and cancel own bookings, view receipts, open support tickets, track bags with a private token.</td>
+      </tr>
+      <tr>
+        <td><strong>ADMIN</strong></td>
+        <td>Ops console</td>
+        <td>Everything in the console, including Users, resolving exceptions, assigning and resolving support tickets, refunds, facility / catalog edits.</td>
+      </tr>
+      <tr>
+        <td><strong>READONLY</strong></td>
+        <td>Ops console</td>
+        <td>View dashboards, bags, bookings, payments, reports and audits. Write actions are blocked.</td>
+      </tr>
+      <tr>
+        <td><strong>KIA_OFFICER</strong></td>
+        <td>Officer phone app</td>
+        <td>Intake, sealing, photos, manifest build / handoff at Kilimanjaro. Not permitted in the web console.</td>
+      </tr>
+      <tr>
+        <td><strong>ZNZ_OFFICER</strong></td>
+        <td>Officer phone app</td>
+        <td>Receive manifests, shelve into storage slots, mark ready, release to owner at Zanzibar. Not permitted in the web console.</td>
+      </tr>
+    </table>
+    <div class="callout warn">
+      Officers who try the web console are redirected to the phone app. Customers and staff use separate sign-in systems —
+      a customer password does not work in the ops console, and vice versa.
+    </div>
+
+    <h2 style="margin-top:18px">A4. End-to-end flow</h2>
+    <p>Follow one bag from the traveller’s first click to collection.</p>
+    <div class="flow">
+      <div class="step"><span class="who">Traveller · Website</span><b>1 · Quote &amp; book</b>Choose service and bag count, get a quote, sign in, create a booking.</div>
+      <div class="step"><span class="who">KIA officer · App</span><b>2 · Receive</b>Register the bag at KIA intake. A bag code and QR label are created.</div>
+      <div class="step"><span class="who">KIA officer · App</span><b>3 · Secure</b>Photos and a seal produce a sealed custody record.</div>
+      <div class="step"><span class="who">KIA officer · App</span><b>4 · Manifest</b>Bags are added to a flight manifest and handed to the airline.</div>
+      <div class="step"><span class="who">Airline</span><b>5 · Fly</b>Bags travel on the flight as airline custody.</div>
+      <div class="step"><span class="who">ZNZ officer · App</span><b>6 · Receive</b>Manifest received in Zanzibar; seals checked; exceptions raised if needed.</div>
+      <div class="step"><span class="who">ZNZ officer · App</span><b>7 · Store</b>Bag shelved in a storage slot.</div>
+      <div class="step"><span class="who">ZNZ officer · App</span><b>8 · Ready &amp; collect</b>Customer notified; verified release at pickup desk.</div>
+    </div>
+    <p>Throughout the journey:</p>
+    <ul>
+      <li>The <strong>traveller</strong> follows progress on the Track page with the bag code and private token.</li>
+      <li>The <strong>ops console</strong> shows the same bag with full detail, plus exceptions, SLA timers, payments and audit history.</li>
+      <li>Every state change is written to the <strong>audit trail</strong>.</li>
+    </ul>
+    <table class="grid">
+      <tr><th>Customer-facing track step</th><th>Typical bag status</th></tr>
+      <tr><td>Received at KIA</td><td>Registered / received at Kilimanjaro</td></tr>
+      <tr><td>Sealed for transfer</td><td>Sealed, ready for airline</td></tr>
+      <tr><td>Airline handover</td><td>With airline</td></tr>
+      <tr><td>Received in Zanzibar</td><td>Received at ZNZ</td></tr>
+      <tr><td>In storage</td><td><code>IN_ZNZ_STORAGE</code></td></tr>
+      <tr><td>Ready / collected</td><td>Ready for collection, then released</td></tr>
+    </table>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part A · Overview</div>
+    <h2>A5. Seeded users for testing</h2>
+    <p>
+      When the API starts with seeding enabled and the users table is empty, GoLyt creates four staff accounts,
+      the KIA and ZNZ locations, twelve Zanzibar storage slots (<code>A-01</code>…<code>A-06</code>, <code>B-01</code>…<code>B-06</code>),
+      and sequence counters. Use these accounts for UAT and demos.
+    </p>
+
+    <div class="callout">
+      Shared pilot password for all four staff accounts:
+      <strong><code>Golyt#2026</code></strong>
+    </div>
+
+    <table class="grid">
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Role</th>
+        <th>Location</th>
+        <th>Where to sign in</th>
+      </tr>
+      <tr>
+        <td>Amina Hassan</td>
+        <td><code>lead@golyt.co.tz</code></td>
+        <td><code>+255700000001</code></td>
+        <td>ADMIN</td>
+        <td>—</td>
+        <td>Ops console (web)</td>
+      </tr>
+      <tr>
+        <td>John Mrema</td>
+        <td><code>kia@golyt.co.tz</code></td>
+        <td><code>+255700000002</code></td>
+        <td>KIA_OFFICER</td>
+        <td>KIA</td>
+        <td>Officer phone app</td>
+      </tr>
+      <tr>
+        <td>Fatma Ali</td>
+        <td><code>znz@golyt.co.tz</code></td>
+        <td><code>+255700000003</code></td>
+        <td>ZNZ_OFFICER</td>
+        <td>ZNZ</td>
+        <td>Officer phone app</td>
+      </tr>
+      <tr>
+        <td>Peter Mgaya</td>
+        <td><code>board@golyt.co.tz</code></td>
+        <td><code>+255700000004</code></td>
+        <td>READONLY</td>
+        <td>—</td>
+        <td>Ops console (web)</td>
+      </tr>
+    </table>
+
+    <h3>What each account is for</h3>
+    <ul>
+      <li><strong>lead@golyt.co.tz</strong> — full admin walkthrough: dashboard, users, refunds, facilities, catalog, exception resolve.</li>
+      <li><strong>board@golyt.co.tz</strong> — read-only monitoring; confirm write actions are blocked.</li>
+      <li><strong>kia@golyt.co.tz</strong> — KIA intake, seal, photos, and manifest work in the Flutter ops app.</li>
+      <li><strong>znz@golyt.co.tz</strong> — Zanzibar receive, storage, ready, and collection in the Flutter ops app.</li>
+    </ul>
+
+    <h3>Seeding rules</h3>
+    <ul>
+      <li>Seeding runs only when <code>app.seed.enabled</code> / <code>APP_SEED_ENABLED</code> is <strong>true</strong> and there are <strong>no users</strong> yet.</li>
+      <li>Once any user exists, seeding does <strong>not</strong> run again — even if you restart the API.</li>
+      <li>Demo staff accounts are created with <strong>must change password = false</strong> so you can sign in immediately for testing. Still change passwords before any shared or production-like environment.</li>
+      <li>There is <strong>no seeded customer account</strong>. Register a traveller on the website Account page for booking / track tests.</li>
+      <li>Airlines are seeded separately when the airlines table is empty (independent of user seeding).</li>
+    </ul>
+
+    <div class="callout warn">
+      Before go-live: sign in as <code>lead@golyt.co.tz</code>, change every seeded password, set
+      <code>APP_SEED_ENABLED=false</code> (or <code>app.seed.enabled: false</code>), and restart the API.
+      Never leave <code>Golyt#2026</code> on a public or production host.
+    </div>
+
+    <h3>Quick test matrix</h3>
+    <table class="grid">
+      <tr><th>Goal</th><th>Sign in as</th><th>Surface</th></tr>
+      <tr><td>Admin console tour</td><td><code>lead@golyt.co.tz</code></td><td>Ops console · <code>http://localhost:5180</code></td></tr>
+      <tr><td>Read-only console</td><td><code>board@golyt.co.tz</code></td><td>Ops console</td></tr>
+      <tr><td>KIA custody</td><td><code>kia@golyt.co.tz</code></td><td>Officer phone app</td></tr>
+      <tr><td>ZNZ custody</td><td><code>znz@golyt.co.tz</code></td><td>Officer phone app</td></tr>
+      <tr><td>Book / track as traveller</td><td>Register new customer</td><td>Public website · Account</td></tr>
+    </table>
+  </section>
+
+  <!-- ================= PART B ================= -->
+  <section class="part-divider">
+    <div class="letter">B</div>
+    <h2>Public website</h2>
+    <p>The traveller’s guide: explore the service, get a quote, manage bookings and follow a bag’s custody timeline.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part B · Public website</div>
+    <h2>B1. Home</h2>
+    <div class="pill-row"><span class="pill">Landing</span><span class="pill">Book</span><span class="pill">Track</span></div>
+    <p>The home page introduces GoLyt: <em>“Arrive free. Bags handled.”</em> Officers secure luggage from Kilimanjaro to Zanzibar while the traveller travels light.</p>
+    <ul>
+      <li>The top navigation is present on every page: <strong>Home, How it works, Services, Pricing, Book, Track, Account</strong>. The current page is underlined.</li>
+      <li><strong>Book a service</strong> takes you to the quote form.</li>
+      <li><strong>Track luggage</strong> takes you to the tracking page.</li>
+      <li>The footer links to About, Contact, FAQs, Terms and Privacy.</li>
+    </ul>
+    <div class="shot"><img src="screenshots/public/customer-01-home.png" alt="Website home" /></div>
+    <p class="caption">Figure B1 — Home page with the two main calls to action.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part B · Public website</div>
+    <h2>B2. How it works</h2>
+    <div class="pill-row"><span class="pill">4 steps</span></div>
+    <p>A short explanation of the four steps from booking to collection. It stresses that GoLyt provides <strong>custody, not GPS tracking</strong>.</p>
+    <ol>
+      <li><strong>Book</strong> — choose a service online, or register at KIA intake with an officer.</li>
+      <li><strong>Secure</strong> — a QR label, photos and seals create a sealed custody record.</li>
+      <li><strong>Transfer</strong> — manifest handover moves bags safely toward Zanzibar storage.</li>
+      <li><strong>Collect</strong> — you receive a ready notice, then a verified release at the pickup desk.</li>
+    </ol>
+    <div class="shot"><img src="screenshots/public/customer-02-how.png" alt="How it works" /></div>
+    <p class="caption">Figure B2 — The four-step custody journey.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part B · Public website</div>
+    <h2>B3. Services</h2>
+    <div class="pill-row"><span class="pill">Live catalog</span></div>
+    <p>Lists every service currently sold, with a short description and price. It is the pilot corridor first; more routes are added as operations expand.</p>
+    <ul>
+      <li><strong>Door to desk</strong> — sealed custody from Kilimanjaro intake to the Zanzibar pickup desk.</li>
+      <li><strong>Overweight handling</strong> — extra handling when a bag is above the standard threshold.</li>
+    </ul>
+    <p class="muted">The services and prices on this page come from the ops console <strong>Catalog</strong> (see C11). When an ADMIN changes the catalog, the website reflects it.</p>
+    <div class="shot"><img src="screenshots/public/customer-03-services.png" alt="Services" /></div>
+    <p class="caption">Figure B3 — Services list.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part B · Public website</div>
+    <h2>B4. Pricing</h2>
+    <div class="pill-row"><span class="pill">Transparent</span><span class="pill">Per bag</span></div>
+    <p>Pricing shows each service with its service code and per-bag price (in Tanzanian shillings), taken live from the catalog.</p>
+    <ul>
+      <li>The final charge follows the <strong>quotation</strong> you receive on the Book page.</li>
+      <li>The <strong>Book</strong> button at the bottom jumps straight to the quote form.</li>
+    </ul>
+    <div class="callout">Mobile money and card checkout are being introduced in stages. Until they are enabled for your booking, an officer or support agent will confirm how to pay.</div>
+    <div class="shot"><img src="screenshots/public/customer-04-pricing.png" alt="Pricing" /></div>
+    <p class="caption">Figure B4 — Pricing page.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part B · Public website</div>
+    <h2>B5. Book a service</h2>
+    <div class="pill-row"><span class="pill">Quote</span><span class="pill">Sign in to convert</span></div>
+    <p>The Book page produces a quotation first; you then convert it into a booking once signed in.</p>
+    <ol>
+      <li>Select a <strong>Service</strong> from the drop-down.</li>
+      <li>Enter the number of <strong>Bags</strong>.</li>
+      <li>Press <strong>Get quote</strong>. A “Quote ready” card appears with the service, quantity, total and a quote number and expiry time.</li>
+      <li>Open <strong>Account</strong> and sign in (or register) to turn the quote into a booking.</li>
+    </ol>
+    <div class="callout warn">Quotes expire. If the expiry time has passed, request a new quote before booking. If the total does not show a valid amount, refresh the page and request the quote again, or contact support.</div>
+    <div class="shot"><img src="screenshots/public/customer-05-book.png" alt="Book a service" /></div>
+    <p class="caption">Figure B5 — Book a service and receive a quote.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part B · Public website</div>
+    <h2>B6. Track luggage</h2>
+    <div class="pill-row"><span class="pill">No sign-in needed</span><span class="pill">Private token</span></div>
+    <p>Anyone holding the <strong>bag code</strong> and <strong>private tracking token</strong> can check a bag — no account required. Both are provided in your GoLyt message or by the officer at intake.</p>
+    <ul>
+      <li>Enter the <strong>Bag code</strong> (for example <code>BG-000042</code>) and the <strong>Tracking token</strong>.</li>
+      <li>Press <strong>Show status</strong> to see the current status, last-updated time and a <strong>custody timeline</strong>.</li>
+      <li><strong>Open printable track page</strong> opens a clean page you can print or save.</li>
+    </ul>
+    <div class="callout">Keep the token private — it is what proves you may see the bag’s details. Do not post it publicly.</div>
+    <div class="shot"><img src="screenshots/public/customer-06-track.png" alt="Track luggage" /></div>
+    <p class="caption">Figure B6 — Track page with a custody timeline.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part B · Public website</div>
+    <h2>B7. Customer account — sign in</h2>
+    <div class="pill-row"><span class="pill">Sign in</span><span class="pill">Register</span></div>
+    <p>Account is where travellers sign in or register. A booking requires an account.</p>
+    <ul>
+      <li>Use the <strong>Sign in</strong> tab with your email and password.</li>
+      <li>New travellers use the <strong>Register</strong> tab to create an account (name, email, phone and password).</li>
+      <li>Use the phone number you will have with you in Tanzania — notifications about your bag are sent there.</li>
+    </ul>
+    <div class="shot"><img src="screenshots/public/customer-07-account.png" alt="Customer sign in" /></div>
+    <p class="caption">Figure B7 — Customer account sign-in.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part B · Public website</div>
+    <h2>B8. My bookings and support</h2>
+    <div class="pill-row"><span class="pill">Bookings</span><span class="pill">Receipt</span><span class="pill">Support</span></div>
+    <p>After signing in, the Account page shows your profile and everything linked to it.</p>
+    <ul>
+      <li><strong>Profile card</strong> — name, email, phone, and a <strong>Sign out</strong> button. A dot next to “Account” in the menu shows you are signed in.</li>
+      <li><strong>My bookings</strong> — each booking shows its number, status (for example OPEN), flight, and the KIA and Zanzibar travel dates.</li>
+      <li><strong>Receipt summary</strong> — expand it to see what was charged.</li>
+      <li><strong>Cancel</strong> — cancels a booking you no longer need.</li>
+      <li><strong>Support</strong> — enter a subject and message to open a ticket. Staff answer it from the ops console Support inbox (C5).</li>
+    </ul>
+    <div class="shot"><img src="screenshots/public/customer-08-account-bookings.png" alt="My bookings" /></div>
+    <p class="caption">Figure B8 — Signed-in account with bookings and the support form.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part B · Public website</div>
+    <h2>B9. FAQs</h2>
+    <div class="pill-row"><span class="pill">Quick answers</span></div>
+    <p>Expandable answers to the most common questions:</p>
+    <ul>
+      <li><strong>Do I need a mobile app?</strong></li>
+      <li><strong>Where do bags go?</strong></li>
+      <li><strong>Is there live GPS tracking?</strong></li>
+      <li><strong>How do I pay?</strong></li>
+      <li><strong>Who can collect?</strong></li>
+    </ul>
+    <p>Click a question to open or close its answer. If the answer is not there, open a support ticket from your account or use the Contact link in the footer.</p>
+    <div class="shot"><img src="screenshots/public/customer-09-faq.png" alt="FAQs" /></div>
+    <p class="caption">Figure B9 — FAQ accordion.</p>
+
+    <h3>Traveller quick checklist</h3>
+    <ul>
+      <li>Get a quote → sign in → create booking.</li>
+      <li>Hand your bag to a GoLyt officer at KIA intake; keep the bag code and tracking token.</li>
+      <li>Check the Track page any time; wait for the “ready” notice before going to the Zanzibar desk.</li>
+      <li>Bring valid ID to collect your bag.</li>
+    </ul>
+  </section>
+
+  <!-- ================= PART C ================= -->
+  <section class="part-divider">
+    <div class="letter">C</div>
+    <h2>Ops console — administrator guide</h2>
+    <p>A walkthrough of every menu available after an ADMIN signs in to the GoLyt operations console, from corridor custody to staff administration.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part C · Getting started</div>
+    <h2>Before you start</h2>
+    <div class="info-card">
+      <ul style="margin-bottom:0">
+        <li>Open the ops console in a browser (local default: <strong>http://localhost:5180</strong>).</li>
+        <li>Only <strong>ADMIN</strong> and <strong>READONLY</strong> accounts use this web console. KIA / Zanzibar officers use the phone app.</li>
+        <li>Every staff account needs a valid Tanzania <strong>phone number</strong> for SMS password delivery.</li>
+        <li>Access tokens last about <strong>15 minutes</strong>; refresh tokens about <strong>8 hours</strong>. If refresh fails, you are signed out automatically.</li>
+        <li>The <strong>Users</strong> menu is visible only to ADMIN. There is <strong>no 2FA</strong> on this console.</li>
+      </ul>
+    </div>
+
+    <h2 style="margin-top:14px">C1. Sign in</h2>
+    <div class="pill-row"><span class="pill">Auth</span><span class="pill">ADMIN / READONLY</span><span class="pill">SMS reset</span></div>
+    <p>Use your staff email and password, then choose <strong>Enter console</strong>.</p>
+    <ul>
+      <li><strong>Forgot password</strong> sends a short SMS code to the phone on your account (not an email link).</li>
+      <li>Enter the SMS code and a new password that meets the staff rules, then sign in again.</li>
+      <li>If an account requires a password change, you must complete it before the menus unlock.</li>
+      <li>Officer accounts (KIA / ZNZ) are blocked here and directed to the phone app.</li>
+    </ul>
+    <div class="callout">
+      Password rules: at least <strong>10 characters</strong>, with uppercase, lowercase, a number, and a special character from
+      <strong>!@#$%^&amp;*</strong>. It must not include your name or email local-part and must not be a common password.
+    </div>
+    <div class="shot narrow"><img src="screenshots/ops/guide-01-login.png" alt="Sign in screen" /></div>
+    <p class="caption">Figure C1 — Staff sign-in for the GoLyt ops console.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part C · Getting started</div>
+    <h2>C1. Sign in — SMS reset and forced change</h2>
+    <h3>Forgot password (SMS code)</h3>
+    <ol>
+      <li>On the sign-in screen choose <strong>Forgot password</strong>.</li>
+      <li>Enter your staff email and request a code; an SMS is sent to the phone number on your account.</li>
+      <li>Enter the <strong>5-character code</strong> (valid about 10 minutes) and choose a new password.</li>
+      <li>Sign in with the new password.</li>
+    </ol>
+    <div class="shot narrow"><img src="screenshots/ops/guide-01b-forgot-sms.png" alt="Forgot password SMS reset" /></div>
+    <p class="caption">Figure C1b — Forgot password: request an SMS code, then set a new password.</p>
+    <h3>Required password change</h3>
+    <p>After a first login or an admin reset you must replace the temporary password. A live checklist ticks off each rule as you type.</p>
+    <div class="shot narrow"><img src="screenshots/ops/guide-01c-change-password.png" alt="Forced password change" /></div>
+    <p class="caption">Figure C1c — Required password change with live rule checklist.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Command</div>
+    <h2>C2. Dashboard</h2>
+    <div class="pill-row"><span class="pill">Live snapshot</span><span class="pill">Alerts</span></div>
+    <p>Dashboard is the home view after login. It summarises custody across the Kilimanjaro → Zanzibar corridor.</p>
+    <ul>
+      <li>Metric cards for received bags, airline readiness, airline custody, Zanzibar storage, ready-for-collection, and open exceptions.</li>
+      <li>Corridor strip showing origin and destination context.</li>
+      <li>Alerts list for seal issues, overdue collections, and other ops warnings.</li>
+    </ul>
+    <div class="callout">Use Dashboard at the start of a shift to see whether the corridor is green or needs immediate attention.</div>
+    <div class="shot medium"><img src="screenshots/ops/guide-02-dashboard.png" alt="Dashboard" /></div>
+    <p class="caption">Figure C2 — Dashboard with live custody metrics and alerts.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Command</div>
+    <h2>C3. Workload</h2>
+    <div class="pill-row"><span class="pill">SLA</span><span class="pill">Staff load</span></div>
+    <p>Workload &amp; SLA shows operational pressure: open exceptions, overdue SLA items, open support, pending payments, and bags ready for collection.</p>
+    <ul>
+      <li><strong>Refresh</strong> reloads the latest queue.</li>
+      <li><strong>SLA queue</strong> lists items that need attention, with bag, type, priority, age, due time and assignee. Overdue rows are tinted.</li>
+      <li><strong>Staff load</strong> shows how open exceptions are distributed across staff, by role and location.</li>
+    </ul>
+    <div class="shot medium"><img src="screenshots/ops/guide-03-workload.png" alt="Workload" /></div>
+    <p class="caption">Figure C3 — Workload &amp; SLA queue and staff load.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Command</div>
+    <h2>C4. Exceptions</h2>
+    <div class="pill-row"><span class="pill">Incidents</span><span class="pill">Resolve</span></div>
+    <p>Exceptions lists bag incidents such as seal mismatch, damage, delay or uncollected bags.</p>
+    <ul>
+      <li>Columns cover bag code, type, priority, status and SLA timing.</li>
+      <li>ADMIN can open <strong>Resolve</strong>, add notes and close an open exception.</li>
+      <li>Overdue rows are highlighted so critical issues stand out.</li>
+    </ul>
+    <div class="shot medium"><img src="screenshots/ops/guide-04-exceptions.png" alt="Exceptions" /></div>
+    <p class="caption">Figure C4 — Exceptions table with open and resolved items.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Command</div>
+    <h2>C5. Support</h2>
+    <div class="pill-row"><span class="pill">Tickets</span><span class="pill">Assign / Resolve</span></div>
+    <p>Support is the triage inbox for tickets that travellers open from the website (B8).</p>
+    <ul>
+      <li>Filter by status (All / OPEN / RESOLVED / CLOSED) and refresh the inbox.</li>
+      <li>ADMIN can <strong>Assign</strong> a ticket to a staff member and <strong>Resolve</strong> with notes.</li>
+      <li>Each row shows subject, customer, linked bag, status, assignee and created time.</li>
+    </ul>
+    <div class="shot medium"><img src="screenshots/ops/guide-05-support.png" alt="Support" /></div>
+    <p class="caption">Figure C5 — Support inbox for customer tickets.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Corridor</div>
+    <h2>C6. Bags</h2>
+    <div class="pill-row"><span class="pill">Search</span><span class="pill">Custody lookup</span></div>
+    <p>Bags is the search console for individual luggage in the corridor.</p>
+    <ul>
+      <li>Search by bag code, customer name, phone or passport, then press <strong>Search</strong>.</li>
+      <li>Click a row to open bag detail: status, location, seal, storage slot and share message.</li>
+      <li>Use this when a passenger or airline desk asks “where is this bag right now?”</li>
+    </ul>
+    <div class="shot medium"><img src="screenshots/ops/guide-06-bags.png" alt="Bags" /></div>
+    <p class="caption">Figure C6 — Bags search results.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Corridor</div>
+    <h2>C7. Bookings</h2>
+    <div class="pill-row"><span class="pill">Reservations</span></div>
+    <p>Bookings lists customer reservations moving through the corridor — the same bookings travellers see under “My bookings” on the website.</p>
+    <ul>
+      <li>See booking number, customer, status, KIA arrival date, Zanzibar travel date and flight.</li>
+      <li>Use it to confirm a booking exists (and whether it is paid) before chasing a missing bag.</li>
+    </ul>
+    <div class="shot medium"><img src="screenshots/ops/guide-07-bookings.png" alt="Bookings" /></div>
+    <p class="caption">Figure C7 — Bookings list.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Corridor</div>
+    <h2>C8. Manifests</h2>
+    <div class="pill-row"><span class="pill">Airline handoff</span><span class="pill">PDF</span></div>
+    <p>Manifests shows flight manifests used for airline handoff between KIA and Zanzibar.</p>
+    <ul>
+      <li>Columns include manifest number, airline, flight, bag count and status.</li>
+      <li>Download a manifest PDF when desks need a printable handoff list.</li>
+      <li>Manifests are built and received by officers in the phone app; the console is for oversight and printing.</li>
+    </ul>
+    <div class="shot medium"><img src="screenshots/ops/guide-08-manifests.png" alt="Manifests" /></div>
+    <p class="caption">Figure C8 — Manifests list with PDF download.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Corridor</div>
+    <h2>C9. Payments</h2>
+    <div class="pill-row"><span class="pill">Money</span><span class="pill">Refunds</span></div>
+    <p>Payments covers provider transactions, receipts, reconcile export and ADMIN refunds.</p>
+    <ul>
+      <li>Filter by status (Pending, Succeeded, Failed, Refunded, etc.).</li>
+      <li><strong>Export reconcile CSV</strong> for finance reconciliation.</li>
+      <li>Download a receipt PDF when a receipt number exists.</li>
+      <li>ADMIN can refund succeeded payments using an optional <strong>refund reason</strong>.</li>
+    </ul>
+    <div class="shot medium"><img src="screenshots/ops/guide-09-payments.png" alt="Payments" /></div>
+    <p class="caption">Figure C9 — Payments filters and transaction table.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Admin</div>
+    <h2>C10. Facilities</h2>
+    <div class="pill-row"><span class="pill">Locations</span><span class="pill">Storage slots</span></div>
+    <p>Facilities manages physical locations and Zanzibar storage slots.</p>
+    <ul>
+      <li>Maintain location codes such as KIA and ZNZ (airport / hub / desk).</li>
+      <li>Create and enable / disable storage slots used when bags are shelved at destination.</li>
+      <li>Occupied slots show the linked bag code.</li>
+    </ul>
+    <div class="shot medium"><img src="screenshots/ops/guide-10-facilities.png" alt="Facilities" /></div>
+    <p class="caption">Figure C10 — Facilities locations and storage management.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Admin</div>
+    <h2>C11. Catalog</h2>
+    <div class="pill-row"><span class="pill">Services</span><span class="pill">Pricing</span></div>
+    <p>Catalog is the service and pricing board for sellable products (for example door-to-desk custody). It feeds the website’s Services, Pricing and Book pages.</p>
+    <ul>
+      <li>Review service code, name, price, unit, sort order and active status.</li>
+      <li>ADMIN can create services, set price (amount in minor units + currency + unit), and enable / disable offerings.</li>
+    </ul>
+    <div class="callout warn">Amounts are stored in minor units (for example TZS 50,000.00 is entered as 5000000).</div>
+    <div class="shot medium"><img src="screenshots/ops/guide-11-catalog.png" alt="Catalog" /></div>
+    <p class="caption">Figure C11 — Service catalog and pricing form.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Admin</div>
+    <h2>C12. Reports</h2>
+    <div class="pill-row"><span class="pill">CSV exports</span></div>
+    <p>Reports exports operational CSVs using shared filters.</p>
+    <ul>
+      <li>Set optional <strong>From</strong>, <strong>To</strong>, <strong>Status</strong> and <strong>Airline</strong> filters once.</li>
+      <li>Download any report: Movements, Manifests, Storage, Exceptions, Daily operations, Collections.</li>
+      <li>Each row explains what the CSV contains before you download.</li>
+    </ul>
+    <div class="shot medium"><img src="screenshots/ops/guide-12-reports.png" alt="Reports" /></div>
+    <p class="caption">Figure C12 — Reports filters and download list.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Admin</div>
+    <h2>C13. Audits</h2>
+    <div class="pill-row"><span class="pill">Traceability</span></div>
+    <p>Audits shows recent operational actions for compliance and troubleshooting.</p>
+    <ul>
+      <li>Set a row limit, then refresh or export CSV.</li>
+      <li>Review who did what, where, and the previous / new values when available.</li>
+    </ul>
+    <div class="shot medium"><img src="screenshots/ops/guide-13-audits.png" alt="Audits" /></div>
+    <p class="caption">Figure C13 — Audit trail of operational actions.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Admin</div>
+    <h2>C14. Users</h2>
+    <div class="pill-row"><span class="pill">ADMIN only</span><span class="pill">Staff accounts</span><span class="pill">Phone + SMS</span></div>
+    <p>Users manages staff accounts. Phone numbers are required so passwords can be delivered and reset by SMS.</p>
+    <ul>
+      <li>List existing users with name, email, <strong>phone</strong>, role, location and active status.</li>
+      <li>Enable or disable accounts from the table.</li>
+      <li>Use <strong>Add user</strong> to create ADMIN, READONLY, KIA_OFFICER or ZNZ_OFFICER accounts.</li>
+      <li>Provide a Tanzania phone number (for example <code>+2557…</code>). A welcome SMS with login details is queued to that number.</li>
+      <li>Use <strong>Generate</strong> in the dialog to create a compliant temporary password.</li>
+      <li>New users must change their password on first sign-in. Admin password resets also SMS the temporary password.</li>
+    </ul>
+    <div class="callout warn">
+      If a phone number is missing or SMS is not configured in the environment, create / reset still succeeds but the SMS may not be delivered.
+      Confirm delivery with the user before closing the task.
+    </div>
+    <div class="shot medium"><img src="screenshots/ops/guide-14-users.png" alt="Users list" /></div>
+    <p class="caption">Figure C14 — Users list including phone numbers.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Admin</div>
+    <h2>C14. Users — Add user dialog</h2>
+    <ol>
+      <li>Choose <strong>Add user</strong>.</li>
+      <li>Enter name and email, select the role and (for officers) the location.</li>
+      <li>Enter the Tanzania phone number — required.</li>
+      <li>Type a password or press <strong>Generate</strong>; the checklist must be fully ticked.</li>
+      <li>Save. The user receives a welcome SMS and must change the password at first sign-in.</li>
+    </ol>
+    <div class="shot medium"><img src="screenshots/ops/guide-15-users-add-dialog.png" alt="Add user dialog" /></div>
+    <p class="caption">Figure C15 — Add user dialog with required phone, password checklist and Generate.</p>
+
+    <h3>Sign out and session notes</h3>
+    <ul>
+      <li>Use the door / arrow icon at the bottom of the side rail to sign out. Your local session is cleared immediately.</li>
+      <li>If the access token expires the console tries the refresh token; if that fails you are returned to sign-in with <em>“Your session expired. Sign in again.”</em></li>
+      <li>SMS codes are 5 characters and valid about 10 minutes.</li>
+    </ul>
+  </section>
+
+
+  <!-- ================= PART E ================= -->
+  <section class="part-divider">
+    <div class="letter">E</div>
+    <h2>Officer phone app</h2>
+    <p>The Flutter ops app for KIA and Zanzibar officers: intake, seal, manifest, receive, store, and verified collection — with photos and QR custody.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part E · Officer phone app</div>
+    <h2>Before you start</h2>
+    <ul>
+      <li>Only <strong>KIA_OFFICER</strong> and <strong>ZNZ_OFFICER</strong> accounts use this app. ADMIN and READONLY accounts are rejected at sign-in and must use the ops console.</li>
+      <li>Install or run the Flutter app from <code>glyt-app</code>. On a physical phone, set the API base to your computer (e.g. <code>http://192.168.1.20:8080</code>). Android emulator: <code>http://10.0.2.2:8080</code>. Chrome / desktop: default <code>http://localhost:8080</code> or <code>--dart-define=BACKEND_URL=…</code>.</li>
+      <li>Pilot test accounts: <code>kia@golyt.co.tz</code> (KIA) and <code>znz@golyt.co.tz</code> (Zanzibar). Shared password <code>Golyt#2026</code> — see A5.</li>
+      <li>Access tokens last about 15 minutes and refresh automatically. After ~30 minutes of inactivity the app signs you out.</li>
+    </ul>
+    <div class="callout">
+      Bottom navigation is always: <strong>Home · Scan · Bags · Menu</strong>. Most custody work happens on a bag’s Overview tab; Menu holds role-specific tools (manifests for KIA; receiving / storage / collection for ZNZ).
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part E · Getting started</div>
+    <h2>E1. Sign in and password change</h2>
+    <div class="pill-row"><span class="pill">KIA / ZNZ only</span><span class="pill">SMS reset</span></div>
+    <p>The sign-in screen shows the GoLyt brand, corridor label <em>KILIMANJARO → ZANZIBAR</em>, and a <strong>Staff sign-in</strong> card.</p>
+    <ol>
+      <li>Enter email and password → <strong>Enter ops</strong>.</li>
+      <li><strong>Forgot password</strong> opens a dialog; the API sends an SMS reset code (in debug builds a local reset token may also appear in the message).</li>
+      <li>If <code>mustChangePassword</code> is true (new users created from the console), the app opens a forced change-password screen before the shell. Pilot seeded accounts skip this so you can test immediately.</li>
+      <li>ADMIN / READONLY credentials show: <em>Operations lead and read-only accounts use the GoLyt admin console</em> — then sign you out.</li>
+    </ol>
+    <div class="shot phone"><img src="screenshots/app/app-01-login.png" alt="Officer app sign-in" /></div>
+    <p class="caption">Figure E1 — Officer ops sign-in.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part E · Shell</div>
+    <h2>E2. Home shell and navigation</h2>
+    <div class="pill-row"><span class="pill">Dashboard</span><span class="pill">Alerts</span></div>
+    <p>After sign-in you land on <strong>Home</strong>: your name, role label (KIA officer / Zanzibar officer), the corridor banner, six metric cards, alerts, and recent bags.</p>
+    <ul>
+      <li>Metrics: Received today, Ready for airline, In airline custody, Zanzibar storage, Ready for collection, Open exceptions (highlighted when &gt; 0).</li>
+      <li>Pull to refresh, or use the refresh icon in the app bar.</li>
+      <li>Tap a recent bag to open bag detail.</li>
+      <li>Bottom tabs: <strong>Home</strong>, <strong>Scan</strong>, <strong>Bags</strong>, <strong>Menu</strong>.</li>
+    </ul>
+    <div class="shot phone"><img src="screenshots/app/app-02-home.png" alt="Officer app home" /></div>
+    <p class="caption">Figure E2 — Home dashboard with custody metrics.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part E · Scan</div>
+    <h2>E3. Scan bag</h2>
+    <div class="pill-row"><span class="pill">QR</span><span class="pill">Manual code</span></div>
+    <p>Point the camera at a GoLyt bag QR, or type the bag ID and tap <strong>Open</strong>. The app posts the code to <code>/api/v1/qr/scan</code> and opens that bag.</p>
+    <div class="callout warn">Use Scan on the ramp and at the collection desk so you never mistype a bag code under time pressure. If the camera is unavailable (some desktop/web builds), use the Bag ID field.</div>
+    <div class="shot phone"><img src="screenshots/app/app-03-scan.png" alt="Scan bag" /></div>
+    <p class="caption">Figure E3 — Scan tab with camera and manual Bag ID.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part E · Bookings &amp; bags</div>
+    <h2>E4. Bookings first, then bags</h2>
+    <div class="pill-row"><span class="pill">Booking first</span><span class="pill">Then add bag</span></div>
+    <div class="callout">
+      Bookings are <strong>never</strong> created behind the scenes. Flow: create or open a booking → add each physical bag to that booking → receive → seal.
+    </div>
+    <h3>Bookings (KIA)</h3>
+    <p><strong>Menu → Bookings</strong> (or the Bookings button on the Bags tab). List and search open bookings. <strong>New booking</strong> captures customer + trip only, then opens the booking detail.</p>
+    <ul>
+      <li>From a booking card or detail, tap <strong>Add bag</strong> (only when status is <code>OPEN</code>).</li>
+      <li>Website bookings that are already <code>OPEN</code> appear in the same list — pick one and add bags; do not recreate them.</li>
+    </ul>
+    <h3>Add bag</h3>
+    <p>The add-bag screen shows the booking header, then bag fields only: type, colour, weight, description, optional airline tag. <strong>Register bag</strong> creates status <code>BOOKED</code> and opens bag detail for receive/seal.</p>
+    <p>From an existing bag Overview: <strong>Add another bag to this booking</strong> reuses the same booking id.</p>
+    <h3>Bags tab</h3>
+    <p>Search by bag code, name, phone, passport, seal, or manifest. The FAB opens <strong>Bookings</strong>, not a silent new booking.</p>
+    <div class="two-col">
+      <div>
+        <div class="shot phone"><img src="screenshots/app/app-04-bags.png" alt="Bags list" /></div>
+        <p class="caption">Figure E4a — Bags search list.</p>
+      </div>
+      <div>
+        <div class="shot phone"><img src="screenshots/app/app-05-intake.png" alt="Add bag form" /></div>
+        <p class="caption">Figure E4b — Add bag onto an existing booking.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part E · Bag detail</div>
+    <h2>E5. Bag detail and custody actions</h2>
+    <div class="pill-row"><span class="pill">Overview</span><span class="pill">Photos</span><span class="pill">Custody</span><span class="pill">Audit</span><span class="pill">Exceptions</span></div>
+    <p>Every bag opens with customer name, status chip, and five tabs. Actions on Overview appear only when the API says they are allowed for your role and the bag’s current status.</p>
+    <ul>
+      <li><strong>Overview</strong> — weight, seal, location, storage slot, condition, type, travel date, phone, passport, manifest; QR image; Print QR label; Share via WhatsApp / email (when allowed).</li>
+      <li><strong>Photos</strong> — capture stage photos from the camera (KIA: full bag, tag side, seal; ZNZ: arrival condition / seal; exception photos when permitted).</li>
+      <li><strong>Custody</strong> — chronological custody events (who, where, when, notes).</li>
+      <li><strong>Audit</strong> — raw audit trail for the bag.</li>
+      <li><strong>Exceptions</strong> — exceptions already linked to this bag.</li>
+    </ul>
+    <div class="shot phone"><img src="screenshots/app/app-06-bag.png" alt="Bag detail" /></div>
+    <p class="caption">Figure E5 — Bag Overview with QR and status.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part E · KIA custody</div>
+    <h2>E6. KIA receive and seal</h2>
+    <div class="pill-row"><span class="pill">Receive</span><span class="pill">Photos</span><span class="pill">Seal</span></div>
+    <h3>Receive at KIA</h3>
+    <ol>
+      <li>Confirm weight (kg) and condition (Good / Minor existing damage / Damaged — damage note required if damaged).</li>
+      <li>Tick <strong>Customer confirms personal effects and no prohibited items</strong>.</li>
+      <li>Capture <strong>full bag</strong> and <strong>tag side</strong> photos.</li>
+      <li>Tap <strong>Confirm receipt</strong>.</li>
+    </ol>
+    <h3>Security seal</h3>
+    <ol>
+      <li>Enter the seal number; set condition; capture the <strong>seal photo</strong>.</li>
+      <li>Bags over 20 kg show an overweight warning — tick <strong>Accept overweight and open a supervisor exception</strong> if you proceed.</li>
+      <li>Tap <strong>Confirm seal</strong>. The bag is then eligible for a flight manifest.</li>
+    </ol>
+    <div class="callout ok">After sealing, print the QR label and share the tracking message with the traveller (WhatsApp or email) from Overview when those actions are available.</div>
+    <div class="shot phone"><img src="screenshots/app/app-07-seal.png" alt="Bag photos and seal stages" /></div>
+    <p class="caption">Figure E6 — Bag Photos tab (KIA full / tag / seal stages). Receive and seal forms appear on Overview when the bag status allows them.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part E · KIA manifests</div>
+    <h2>E7. Manifests (create → handover)</h2>
+    <div class="pill-row"><span class="pill">Menu · Manifests</span><span class="pill">KIA</span></div>
+    <p>From <strong>Menu → Manifests</strong> (KIA tools):</p>
+    <ol>
+      <li><strong>Create</strong> — choose airline (from active catalog), flight number, optional date and notes → <strong>Create manifest</strong> (route is JRO–ZNZ).</li>
+      <li>On a <strong>DRAFT</strong> manifest: tick eligible sealed bags → <strong>Add selected</strong>; remove bags with the × control if needed.</li>
+      <li><strong>Finalise manifest</strong> locks the bag list.</li>
+      <li>When status is <strong>FINALISED</strong>, tap <strong>Confirm airline handover</strong> — bags move into airline custody.</li>
+      <li><strong>Print / save PDF</strong> at any time for the paper copy that travels with the flight.</li>
+    </ol>
+    <div class="shot phone"><img src="screenshots/app/app-08-manifests.png" alt="Manifest list" /></div>
+    <p class="caption">Figure E7 — Manifest list with Create action.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part E · Zanzibar custody</div>
+    <h2>E8. Zanzibar receive, store, collect</h2>
+    <div class="pill-row"><span class="pill">Receiving</span><span class="pill">Storage</span><span class="pill">Collection</span></div>
+    <p>ZNZ Menu tools and bag Overview actions work together:</p>
+    <h3>Receiving (Menu)</h3>
+    <p>Lists manifests in <strong>HANDED_OVER</strong> status. Open a manifest to receive bags, or use <strong>Flag missing</strong> when bags on the paper list never arrive. On each bag, <strong>Receive in Zanzibar</strong> asks for the observed seal, intact/damaged flags, condition, photos, and optional exception note.</p>
+    <h3>Storage</h3>
+    <p>Grid of slots (<code>A-01</code>… / <code>B-01</code>…). Occupied tiles show bag code, customer, and expected collection; tap to open the bag. On Overview, <strong>Assign storage</strong> picks a free slot → <strong>Store bag</strong>.</p>
+    <h3>Ready and collection</h3>
+    <ol>
+      <li><strong>Mark ready for collection</strong> when the bag can be released (notifies the customer).</li>
+      <li>From Collection search (or Scan), open the bag → <strong>Customer collection</strong>: collected-by name, ID verified, confirmation that the correct person collected, optional notes → <strong>Release bag</strong>.</li>
+    </ol>
+    <div class="two-col">
+      <div>
+        <div class="shot phone"><img src="screenshots/app/app-09-storage.png" alt="Storage grid" /></div>
+        <p class="caption">Figure E8a — Storage slot grid.</p>
+      </div>
+      <div>
+        <div class="shot phone"><img src="screenshots/app/app-10-menu-znz.png" alt="ZNZ menu" /></div>
+        <p class="caption">Figure E8b — Zanzibar Menu tools.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part E · Exceptions &amp; reports</div>
+    <h2>E9. Exceptions and reports</h2>
+    <div class="pill-row"><span class="pill">Both roles</span></div>
+    <h3>Raise or resolve</h3>
+    <ul>
+      <li>On a bag Overview, <strong>Raise exception</strong> (when allowed): type (overweight, seal mismatch, delayed, damaged, wrong bag, manifest discrepancy, …), priority (Normal / High / Critical), description.</li>
+      <li><strong>Menu → Exceptions</strong> lists open exceptions. Tap <strong>Resolve</strong>, enter resolution notes, confirm.</li>
+      <li>Seal damage / mismatch at ZNZ receive and overweight acceptance at KIA can auto-open supervisor exceptions — still add clear notes.</li>
+    </ul>
+    <h3>Reports (KIA Menu)</h3>
+    <p>KIA officers can open CSV-style reports in-app: bag movement, manifests, storage, exceptions, daily operations, collections. Use them for shift handovers; the ops console has the richer Reports UI for leads.</p>
+    <div class="shot phone"><img src="screenshots/app/app-11-exceptions.png" alt="Exceptions list" /></div>
+    <p class="caption">Figure E9 — Open exceptions list with Resolve.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part E · Reference</div>
+    <h2>E10. Role checklist</h2>
+    <table class="grid">
+      <tr><th>Task</th><th>Who</th><th>Where in the app</th></tr>
+      <tr><td>New walk-up booking</td><td>KIA</td><td>Menu → Bookings → New booking</td></tr>
+      <tr><td>Add bag to booking</td><td>KIA</td><td>Bookings → Add bag (or bag Overview)</td></tr>
+      <tr><td>Receive + photos + seal</td><td>KIA</td><td>Bag Overview</td></tr>
+      <tr><td>Build / finalise / hand over manifest</td><td>KIA</td><td>Menu → Manifests</td></tr>
+      <tr><td>Receive from airline + seal check</td><td>ZNZ</td><td>Menu → Receiving + bag Overview</td></tr>
+      <tr><td>Assign storage slot</td><td>ZNZ</td><td>Bag Overview / Menu → Storage</td></tr>
+      <tr><td>Ready + verified release</td><td>ZNZ</td><td>Bag Overview / Menu → Collection</td></tr>
+      <tr><td>Open bag by QR</td><td>Both</td><td>Scan</td></tr>
+      <tr><td>Raise / resolve exception</td><td>Both</td><td>Bag Overview / Menu → Exceptions</td></tr>
+      <tr><td>Sign out</td><td>Both</td><td>Menu → Sign out</td></tr>
+    </table>
+    <div class="callout warn">
+      Never skip photos or the prohibited-items confirmation. Never release a bag without ID verification. If a seal does not match, raise or confirm the CRITICAL exception before storage or release.
+    </div>
+    <div class="footer-note">
+      GoLyt officer phone app · Part E · November 2026
+    </div>
+  </section>
+
+
+  <!-- ================= PART D ================= -->
+  <section class="part-divider">
+    <div class="letter">D</div>
+    <h2>Daily operations tips</h2>
+    <p>Practical routines for ops leads: keep the SLA queue clean, chase unpaid bookings, and close the day with confidence.</p>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part D · Daily operations</div>
+    <h2>D1. Start-of-shift routine</h2>
+    <ol>
+      <li><strong>Dashboard</strong> — scan the cards and alerts. Anything red (open exceptions, seal issues, overdue collections) goes first.</li>
+      <li><strong>Workload</strong> — check Overdue SLA, Open support, Pending payments and Ready for collection counts.</li>
+      <li><strong>Manifests</strong> — confirm today’s flights have manifests and the status matches what officers report.</li>
+      <li><strong>Support</strong> — assign any unowned OPEN tickets.</li>
+      <li><strong>Payments</strong> — filter Pending to see money that has not settled (see D3).</li>
+    </ol>
+
+    <h2 style="margin-top:16px">D2. Working the SLA queue</h2>
+    <div class="pill-row"><span class="pill">Workload</span><span class="pill">Exceptions</span></div>
+    <p>The SLA queue on <strong>Workload</strong> is your priority list. Each row is an exception with a due time.</p>
+    <table class="grid">
+      <tr><th>Priority</th><th>How to treat it</th></tr>
+      <tr><td><strong>CRITICAL</strong></td><td>Act immediately. Seal mismatch or damaged seals can affect release — contact the responsible officer now.</td></tr>
+      <tr><td><strong>HIGH</strong></td><td>Handle before routine work, e.g. a damaged bag that must be documented before collection.</td></tr>
+      <tr><td><strong>Lower</strong></td><td>Handle in due-time order.</td></tr>
+    </table>
+    <ol>
+      <li>Sort mentally by <strong>overdue first</strong> (tinted rows), then by priority, then by due time.</li>
+      <li>Look at the <strong>Assignee</strong>. Unassigned items need an owner; use <strong>Staff load</strong> to find who has capacity.</li>
+      <li>Open the bag in <strong>Bags</strong> to read status, seal and location before you decide.</li>
+      <li>Fix the real issue (re-seal, re-check, contact the airline or customer), then use <strong>Resolve</strong> on the exception with a clear note — what happened and what was done.</li>
+      <li>Refresh Workload to confirm the item has left the queue and the overdue count dropped.</li>
+    </ol>
+    <div class="callout ok">Good resolution notes save time later: the audit trail and the Exceptions report both show them.</div>
+    <div class="callout warn">The exact SLA durations per exception type are set by the platform configuration. Follow the due time shown in the queue rather than assuming a fixed number of hours.</div>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part D · Daily operations</div>
+    <h2>D3. Unpaid and pending bookings</h2>
+    <div class="pill-row"><span class="pill">Payments</span><span class="pill">Bookings</span><span class="pill">Support</span></div>
+    <p>A booking can exist before money has settled. Chasing these early prevents surprises at collection time.</p>
+    <h3>Find them</h3>
+    <ol>
+      <li>Open <strong>Payments</strong> and set Status to <strong>Pending</strong>, then <strong>Failed</strong>. Note the booking number on each row.</li>
+      <li>Open <strong>Bookings</strong> and search for those booking numbers. Check the KIA arrival and Zanzibar travel dates — the closer the date, the higher the priority.</li>
+      <li>On <strong>Workload</strong>, the <em>Pending payments</em> card gives the headline count to track through the day.</li>
+    </ol>
+    <h3>Act on them</h3>
+    <table class="grid">
+      <tr><th>Situation</th><th>Suggested action</th></tr>
+      <tr><td>Pending, travel date is today or tomorrow</td><td>Contact the customer by phone first. Confirm they intend to pay and how (mobile money, card or at the desk).</td></tr>
+      <tr><td>Failed payment</td><td>Ask the customer to retry or use another method; create or update a support note so the next shift knows.</td></tr>
+      <tr><td>Pending for a long time, no response</td><td>Escalate to the ops lead. Customer may cancel the booking from their account.</td></tr>
+      <tr><td>Customer says they paid but status is Pending</td><td>Ask for the provider reference, compare with the provider statement via <strong>Export reconcile CSV</strong>, then escalate to finance.</td></tr>
+      <tr><td>Paid in error or booking cancelled after payment</td><td>ADMIN: use <strong>Refund</strong> on the Succeeded payment and enter a refund reason.</td></tr>
+    </table>
+    <div class="callout warn">
+      Do not release a bag on the strength of a verbal “I paid”. Confirm the payment status in the console (or the receipt number) first.
+    </div>
+    <div class="callout">
+      Always record what you did — a support ticket note or exception note — so that the next officer does not repeat the call.
+    </div>
+
+    <h2 style="margin-top:16px">D4. End-of-day checklist</h2>
+    <ul>
+      <li>Workload: Overdue SLA is zero, or every remaining item has an owner and a note.</li>
+      <li>Support: no unassigned OPEN tickets.</li>
+      <li>Payments: pending items for tomorrow’s flights have been chased.</li>
+      <li>Manifests: every flight of the day shows the expected status.</li>
+      <li>Reports: download <strong>Daily operations</strong> (and <strong>Exceptions</strong> if any were raised) for the record.</li>
+      <li>Audits: scan for unexpected actions (unusual refunds, user changes).</li>
+    </ul>
+  </section>
+
+  <section class="page">
+    <div class="kicker">Part D · Reference</div>
+    <h2>D5. Quick reference</h2>
+    <div class="two-col">
+      <div>
+        <h3>“Where is bag X?”</h3>
+        <p>Console → <strong>Bags</strong> → search code / name / phone / passport → open row.</p>
+        <h3>“I can’t see my bag online”</h3>
+        <p>Check the traveller has the right bag code <em>and</em> the private token. If the token is lost, an ADMIN can look up the bag and share its message.</p>
+        <h3>“Customer forgot a password”</h3>
+        <p><strong>Customers:</strong> website Account page / support. <strong>Staff:</strong> Forgot password (SMS) on the console, or an ADMIN reset from Users.</p>
+        <h3>“Price changed?”</h3>
+        <p>Catalog edit → website Services / Pricing update. Remember minor units.</p>
+      </div>
+      <div class="info-card">
+        <h3 style="margin-top:0">Need help?</h3>
+        <p class="muted">Run the ops console with <code>npm run dev</code> in <code>glyt-admin-ui</code> (port 5180) and the API with <code>mvn spring-boot:run</code> in <code>glyt-backend</code> (port 8070).</p>
+        <p class="muted">The public website runs from <code>glyt-website</code> with <code>npm run dev</code>.</p>
+        <p class="muted">The officer phone app runs from <code>glyt-app</code> with <code>flutter run</code> (point <code>BACKEND_URL</code> at the API, e.g. <code>http://192.168.x.x:8080</code>).</p>
+        <p class="muted">SMS delivery needs the shared notification service configured in the environment (<code>app.notification.*</code> / <code>APP_NOTIFICATION_*</code>).</p>
+      </div>
+    </div>
+    <div class="footer-note">
+      GoLyt — Go light. Explore more. · Platform User Guide · November 2026 · Confidential internal document
+    </div>
+  </section>
+</body>
+</html>

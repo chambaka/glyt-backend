@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +15,13 @@ import lombok.Setter;
 import java.time.Instant;
 
 @Entity
-@Table(name = "customers")
+@Table(
+        name = "customers",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uk_customer_passport_nationality",
+                columnNames = {"passport_number", "nationality"}
+        )
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -39,7 +46,7 @@ public class Customer {
     @Column(nullable = false)
     private String nationality;
 
-    @Column(nullable = false)
+    @Column(name = "passport_number", nullable = false)
     private String passportNumber;
 
     @Column(nullable = false)
